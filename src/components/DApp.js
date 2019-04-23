@@ -4,6 +4,8 @@ import { DrizzleContext } from "drizzle-react";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import WagerList from './WagerList';
+
 const { AccountData, ContractData, ContractForm } = newContextComponents;
 
 export default () => (
@@ -102,6 +104,12 @@ export default () => (
               method="mint"
               labels={["To Address", "Amount to Mint"]}
             />
+            <hr />
+            <h1>Action</h1>
+            <WagerList
+              drizzle={drizzle}
+              drizzleState={drizzleState}
+              contract="FWC" />
           </div>
         </div >
       );

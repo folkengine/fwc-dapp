@@ -2,22 +2,11 @@ import React from "react";
 import PropTypes from 'prop-types';
 import { newContextComponents } from "drizzle-react-components";
 import { DrizzleContext } from "drizzle-react";
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 
-import CountingComponent from "./CountingComponent";
-import OfferingContractForm from './OfferingContractForm';
 import ListItem from "@material-ui/core/ListItem";
-import Avatar from "@material-ui/core/Avatar";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Typography from "@material-ui/core/Typography";
 import ListItemText from "@material-ui/core/ListItemText";
 import {withStyles} from "@material-ui/core";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
 
 const { ContractData } = newContextComponents;
 
@@ -42,11 +31,11 @@ const styles = theme => ({
   }
 });
 
-class WagerListItem extends CountingComponent {
+class WagerListItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      actionId: this.props.actionId,
+      wagerId: this.props.wagerId,
       props: props,
     }
   }
@@ -62,32 +51,52 @@ class WagerListItem extends CountingComponent {
             return "Loading...";
           }
           
+          const wagerId = this.state.wagerId;
+          
           return (
             <ListItem alignItems="flex-start">
               <div className="section">
                 <span>
+                  
                   <ListItemText
                     primary={
                       <React.Fragment>
+                        Wager #{wagerId}:&nbsp;
+                        <b><ContractData
+                          drizzle={drizzle}
+                          drizzleState={drizzleState}
+                          contract="FWC"
+                          method="getWagerDescription"
+                          methodArgs={[wagerId]}
+                        /></b>&nbsp;
+                        Status:
                         <ContractData
                           drizzle={drizzle}
                           drizzleState={drizzleState}
-                          contract="V1C"
-                          method="getWagerDescription"
-                          methodArgs={[this.state.actionId]}
+                          contract="FWC"
+                          method="getWagerStatus"
+                          methodArgs={[wagerId]}
                         />
                       </React.Fragment>
                     }
                     secondary={
                       <React.Fragment>
                         <Typography component="span" className={classes.inline} color="textPrimary">
-                          Status:
+                          Bettor:
                           <ContractData
                             drizzle={drizzle}
                             drizzleState={drizzleState}
-                            contract="V1C"
-                            method="getWagerStatus"
-                            methodArgs={[this.state.actionId]}
+                            contract="FWC"
+                            method="getWagerBettor"
+                            methodArgs={[wagerId]}
+                          /><br />
+                          Acceptor:
+                          <ContractData
+                            drizzle={drizzle}
+                            drizzleState={drizzleState}
+                            contract="FWC"
+                            method="getWagerAcceptor"
+                            methodArgs={[wagerId]}
                           />
                         </Typography>
                       </React.Fragment>
@@ -105,7 +114,7 @@ class WagerListItem extends CountingComponent {
 
 WagerListItem.propTypes = {
   classes: PropTypes.object.isRequired,
-  actionId: PropTypes.number.isRequired,
+  wagerId: PropTypes.number.isRequired,
 };
 
 export default withStyles(styles)(WagerListItem);
